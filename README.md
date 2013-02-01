@@ -12,30 +12,42 @@ Note: this is a work in progress.
 # Usage
 
     > your app.rb
-	class AnotherDocumentedApp < Sinatra::Base
-	  register Sinatra::DocDsl 
-	  
-	  page do      
-	    title "DocDSL demo"
-	    header "DocDSL API"
-	    introduction "is awesome"
-	    footer "QED"
-	  end
-	  
-	  documentation "get a list of things"
-	  get "/things" do
-	    "{}"
-	  end
-	  
-	  documentation "post a blob" do
-	    payload "some json content"
-	    response "some other json content"
-	  end
-	
-	  post "/things" do
-	    "{}"
-	  end
-	end
+    class DocumentedApp < Sinatra::Base
+      register Sinatra::DocDsl 
+      
+      page do      
+        title "DocDSL demo"
+        header "DocDSL API"
+        introduction "is awesome"
+        footer "QED"
+      end
+  
+      documentation "get a list of things"
+      get "/things" do
+        "{}"
+      end
+      
+      documentation "post a blob" do
+        payload "some json content"
+        response "some other json content"
+      end
+
+      post "/things" do
+        "{}"
+      end
+
+      documentation "you can document" do
+        param :param1, "url parameters"
+        query_param :queryParam1, "query string parameters"
+        header 'Content-Type', "header"
+        header 'Etag', "another header"
+        payload "the payload"
+        response "and of course a the response"
+      end
+      post "/everything/:param1" do
+        "..."
+      end
+    end
 
 # License
 

@@ -4,7 +4,7 @@ require 'lib/docdsl'
 
 describe 'docdsl' do
   describe 'documenting with defaults' do
-    class SomeDocumentedApp < Sinatra::Base
+    class AnotherDocumentedApp < Sinatra::Base
       register Sinatra::DocDsl
   
       documentation "get a list of stuff"
@@ -22,22 +22,10 @@ describe 'docdsl' do
       get "/stuff/:kind" do
         "..."
       end
-      
-      documentation "you can document" do
-        param :param1, "url parameters"
-        query_param :queryParam1, "query string parameters"
-        header 'Content-Type', "header"
-        header 'Etag', "another header"
-        payload "the payload"
-        response "and of course a the response"
-      end
-      post "/everything/:param1" do
-        "..."
-      end
     end
     
     before(:all) do
-      @browser = Rack::Test::Session.new(Rack::MockSession.new(SomeDocumentedApp))
+      @browser = Rack::Test::Session.new(Rack::MockSession.new(AnotherDocumentedApp))
       @browser.get '/doc'
       @browser.last_response.ok?.should be_true
     end
@@ -58,19 +46,6 @@ describe 'docdsl' do
       @browser.last_response.body.should_not include("/undocumented")
     end 
     
-    it 'should contain the default title, header, and footer' do
-      [
-        "url parameters",
-        "query string parameters",
-        'Content-Type', "header",
-        'Etag', "another header",
-        "the payload",
-        "and of course a the response",
-      ].each { |phrase|
-        @browser.last_response.body.should include(phrase)
-      }
-    end
-    
     it "should document all elements" do
       [
         "DocDSL Documentation",
@@ -84,7 +59,7 @@ describe 'docdsl' do
   end
     
   describe "Documenting with custom title, header, intro, and footer" do
-    class AnotherDocumentedApp < Sinatra::Base
+    class DocumentedApp < Sinatra::Base
       register Sinatra::DocDsl 
       
       page do      
@@ -107,10 +82,22 @@ describe 'docdsl' do
       post "/things" do
         "{}"
       end
+
+      documentation "you can document" do
+        param :param1, "url parameters"
+        query_param :queryParam1, "query string parameters"
+        header 'Content-Type', "header"
+        header 'Etag', "another header"
+        payload "the payload"
+        response "and of course a the response"
+      end
+      post "/everything/:param1" do
+        "..."
+      end
     end
     
     before(:all) do
-      @browser = Rack::Test::Session.new(Rack::MockSession.new(AnotherDocumentedApp))
+      @browser = Rack::Test::Session.new(Rack::MockSession.new(DocumentedApp))
       @browser.get '/doc'
       @browser.last_response.ok?.should be_true
     end
@@ -123,6 +110,19 @@ describe 'docdsl' do
         "GET /things",
         "get a list of things",
         "QED"
+      ].each { |phrase|
+        @browser.last_response.body.should include(phrase)
+      }
+    end
+    
+    it 'should contain the default title, header, and footer' do
+      [
+        "url parameters",
+        "query string parameters",
+        'Content-Type', "header",
+        'Etag', "another header",
+        "the payload",
+        "and of course a the response",
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
       }
