@@ -1,27 +1,61 @@
 module Sinatra
   module DocDsl
+    
     class PageDoc
-      attr_accessor :title,:header,:footer,:introduction
+      attr_accessor :the_title,:the_header,:the_footer,:the_introduction
       
-      def initialize()
-        @title='DocDSL Documentation'
-        @header="API"
-        @introduction="API Documentation for this resource"
-        @footer="Powered by <strong>Sinatra DocDSL</strong>"
+      def initialize(&block)
+        @the_title='DocDSL Documentation'
+        @the_header="API"
+        @the_introduction="API Documentation for this resource"
+        @the_footer="Powered by <strong>Sinatra DocDSL</strong>"
+        
+        if(block)
+          if block.arity == 1
+            block(self)
+          else
+            puts
+            instance_eval(&block)
+          end
+        end
+      end
+      
+      def title(t)
+        @the_title=t
+      end
+      
+      def header(h)
+        @the_header=h
+      end
+      
+      def footer(f)
+        @the_footer=f
+      end
+      
+      def introduction(i)
+        @the_introduction=i
       end
     end
     
     class DocEntry
       attr_accessor :desc,:params,:paths,:query_params,:headers,:payload,:response
       
-      def initialize()
+      def initialize(description, &block)
         @paths=[]
-        @desc='...'
+        @desc=description
         @params={}
         @query_params={}
         @headers={} 
         @payload=nil
-        @response=nil     
+        @response=nil 
+        if(block)
+          if block.arity == 1
+            block(self)
+          else
+            puts
+            instance_eval(&block)
+          end
+        end
       end
             
       def <<(path)
@@ -35,6 +69,31 @@ module Sinatra
       def inspect
         "#{@paths.join(', ')} # #{@desc}"
       end
+      
+      def describe(desc)
+        @desc=desc
+      end
+      
+      def payload(desc)
+        @payload=desc
+      end
+      
+      def response(desc)
+        @response=desc      
+      end
+      
+      def param(name,desc)
+        @params[name]=desc      
+      end
+      
+      def header(name,desc)
+        @headers[name]=desc      
+      end
+      
+      def query_param(name,desc)
+        @query_params[name]=desc      
+      end
+      
     end
     
     def self.registered(app)
@@ -43,62 +102,13 @@ module Sinatra
       end      
     end
     
-    def ensure_doc_exists
-      if !@last_doc
-        @last_doc = DocEntry.new()
-        (@docs ||= []) << @last_doc
-      end      
+    def page(&block)
+      @page_doc = PageDoc.new(&block)
     end
     
-    def doc(desc, params = {})
-      ensure_doc_exists
-      @last_doc.desc=desc
-      @last_doc.params=params
-    end
-    
-    def payload(desc)
-      ensure_doc_exists
-      @last_doc.payload=desc
-    end
-    
-    def response(desc)
-      ensure_doc_exists
-      @last_doc.response=desc      
-    end
-    
-    def param(name,desc)
-      ensure_doc_exists
-      @last_doc.params[name]=desc      
-    end
-    
-    def header(name,desc)
-      ensure_doc_exists
-      @last_doc.headers[name]=desc      
-    end
-    
-    def query_param(name,desc)
-      ensure_doc_exists
-      @last_doc.query_params[name]=desc      
-    end
-    
-    def title(t)
-      @page_doc ||= PageDoc.new
-      @page_doc.title=t
-    end
-    
-    def header(h)
-      @page_doc ||= PageDoc.new
-      @page_doc.header=h
-    end
-    
-    def footer(f)
-      @page_doc ||= PageDoc.new
-      @page_doc.footer=f
-    end
-    
-    def introduction(i)
-      @page_doc ||= PageDoc.new
-      @page_doc.introduction=i
+    def documentation(description,&block)
+      @last_doc=DocEntry.new(description,&block)
+      (@docs ||= []) << @last_doc
     end
     
     def method_added(method)
@@ -150,7 +160,7 @@ module Sinatra
         body= <<-HTML
           <html>
             <head>
-              <title>#{@page_doc.title}</title>
+              <title>#{@page_doc.the_title}</title>
               <style type="text/css">
                 #container{width:960px; margin:1em auto; font-family:monaco, monospace;}
                 dt{ background:#f5f5f5; font-weight:bold; float:left; margin-right:1em; }
@@ -159,11 +169,11 @@ module Sinatra
             </head>
             <body>
               <div id="container">
-                <h1 id="title">#{@page_doc.header}</h1>
-                <p>#{@page_doc.introduction}</p>
+                <h1 id="title">#{@page_doc.the_header}</h1>
+                <p>#{@page_doc.the_introduction}</p>
               
                 #{render_docs_list(entries)}
-                <p>#{@page_doc.footer}</p>
+                <p>#{@page_doc.the_footer}</p>
               </div>
             </body>
           </html>

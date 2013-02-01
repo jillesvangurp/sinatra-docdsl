@@ -7,7 +7,7 @@ describe 'docdsl' do
     class SomeDocumentedApp < Sinatra::Base
       register Sinatra::DocDsl
   
-      doc "get a list of stuff"
+      documentation "get a list of stuff"
       get "/stuff" do
         "..."
       end
@@ -16,8 +16,9 @@ describe 'docdsl' do
         "..."
       end
       
-      doc "get specific stuff"
-      param :kind, "the stuff"
+      documentation "get specific stuff" do
+        param :kind, "the stuff"
+      end
       get "/stuff/:kind" do
         "..."
       end
@@ -29,7 +30,7 @@ describe 'docdsl' do
       @browser.last_response.ok?.should be_true
     end
     
-    it 'should contain things that was documented' do
+    it 'should contain things that are documented' do
       [
         "GET /stuff",
         "get a list of stuff",
@@ -59,21 +60,24 @@ describe 'docdsl' do
     
   describe "Documenting with custom title, header, intro, and footer" do
     class AnotherDocumentedApp < Sinatra::Base
-      register Sinatra::DocDsl
+      register Sinatra::DocDsl 
       
-      title "DocDSL demo"
-      header "DocDSL API"
-      introduction "is awesome"
-      footer "QED"
+      page do      
+        title "DocDSL demo"
+        header "DocDSL API"
+        introduction "is awesome"
+        footer "QED"
+      end
   
-      doc "get a list of things"
+      documentation "get a list of things"
       get "/things" do
         "{}"
       end
       
-      doc "post a blob"
-      payload "some json content"
-      response "some other json content"
+      documentation "post a blob" do
+        payload "some json content"
+        response "some other json content"
+      end
 
       post "/things" do
         "{}"

@@ -6,25 +6,36 @@ Note: this is a work in progress.
 
 # install
 	TODO actually deploy the gem, for now build it yourself
+    
     > gem install sinatra-docdsl
 
 # Usage
 
     > your app.rb
-    
-    TODO update documentation; for now you are better off looking at the tests
-    
-    class App < Sinatra::Base
-      register Sinatra::Doc
-      
-      doc "gets a list of"
-      get "something" { ... }
-    
-      doc "you get", { 
-        :id => "the id"
-      }
-      get "whatever/:id" { ... }
-    end
+class AnotherDocumentedApp < Sinatra::Base
+  register Sinatra::DocDsl 
+  
+  page do      
+    title "DocDSL demo"
+    header "DocDSL API"
+    introduction "is awesome"
+    footer "QED"
+  end
+  
+  documentation "get a list of things"
+  get "/things" do
+    "{}"
+  end
+  
+  documentation "post a blob" do
+    payload "some json content"
+    response "some other json content"
+  end
+
+  post "/things" do
+    "{}"
+  end
+end
 
 # License
 
