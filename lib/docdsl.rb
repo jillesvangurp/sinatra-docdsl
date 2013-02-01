@@ -12,12 +12,16 @@ module Sinatra
     end
     
     class DocEntry
-      attr_accessor :desc,:params,:paths,:query_params,:headers
+      attr_accessor :desc,:params,:paths,:query_params,:headers,:payload,:response
       
       def initialize()
         @paths=[]
+        @desc='...'
+        @params={}
         @query_params={}
-        @headers={}      
+        @headers={} 
+        @payload=nil
+        @response=nil     
       end
             
       def <<(path)
@@ -39,13 +43,42 @@ module Sinatra
       end      
     end
     
-    def doc(desc, params = {})
+    def ensure_doc_exists
       if !@last_doc
         @last_doc = DocEntry.new()
         (@docs ||= []) << @last_doc
-      end
+      end      
+    end
+    
+    def doc(desc, params = {})
+      ensure_doc_exists
       @last_doc.desc=desc
       @last_doc.params=params
+    end
+    
+    def payload(desc)
+      ensure_doc_exists
+      @last_doc.payload=desc
+    end
+    
+    def response(desc)
+      ensure_doc_exists
+      @last_doc.response=desc      
+    end
+    
+    def param(name,desc)
+      ensure_doc_exists
+      @last_doc.params[name]=desc      
+    end
+    
+    def header(name,desc)
+      ensure_doc_exists
+      @last_doc.headers[name]=desc      
+    end
+    
+    def query_param(name,desc)
+      ensure_doc_exists
+      @last_doc.query_params[name]=desc      
     end
     
     def title(t)
@@ -57,10 +90,12 @@ module Sinatra
       @page_doc ||= PageDoc.new
       @page_doc.header=h
     end
+    
     def footer(f)
       @page_doc ||= PageDoc.new
       @page_doc.footer=f
     end
+    
     def introduction(i)
       @page_doc ||= PageDoc.new
       @page_doc.introduction=i
@@ -78,14 +113,35 @@ module Sinatra
     end
     
     def render_docs_list(entries) 
-      entries.inject('<dl>') { |markup, entry|
+      entries.inject('') { | markup, entry|
         path = entry.paths.join(', ')
-        desc = entry.desc
-        params = entry.params.inject('') { |li,(k,v)|
-          li << "<dt>:%s</dt><dd>%s</dd>" % [k,v]
-        }
-        markup << "<dt>%s</dt><dd>%s<dl>%s</dl></dd>" % [path, desc, params]
-      } << "</dl>"
+        if entry.params.length >0
+          params = entry.params.inject("<h3>Url Parameters</h3>\n<dl>") { |li,(k,v)|
+            li << "<dt>:%s</dt><dd>%s</dd>" % [k,v]
+          }
+          params << "</dl>\n"
+        end
+        params ||= ''
+        
+        if entry.query_params.length >0
+          query_params = entry.query_params.inject("<h3>Query Parameters</h3>\n<dl>") { |li,(k,v)|
+            li << "<dt>:%s</dt><dd>%s</dd>" % [k,v]
+          }
+          query_params << "</dl>\n"
+        end 
+        query_params ||=''
+        
+        
+        if entry.query_params.length >0
+          headers = entry.headers.inject("<h3>Header Parameters</h3>\n<dl>") { |li,(k,v)|
+            li << "<dt>:%s</dt><dd>%s</dd>" % [k,v]
+          }
+          headers << "</dl>\n"
+        end
+        headers ||= ''
+
+        markup << "<h2>%s</h2>\n<p>%s</p>\n%s%s%s" % [path, entry.desc, params, query_params, headers]
+      } << ""
     end
     
     def render_docs_page(entries)
@@ -102,13 +158,13 @@ module Sinatra
               </style>
             </head>
             <body>
-              <h1 id="title">#{@page_doc.header}</h1>
-              <p>#{@page_doc.introduction}</p>
-              
               <div id="container">
+                <h1 id="title">#{@page_doc.header}</h1>
+                <p>#{@page_doc.introduction}</p>
+              
                 #{render_docs_list(entries)}
+                <p>#{@page_doc.footer}</p>
               </div>
-              <p>#{@page_doc.footer}</p>
             </body>
           </html>
         HTML

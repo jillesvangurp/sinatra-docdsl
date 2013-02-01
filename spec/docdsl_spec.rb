@@ -16,9 +16,8 @@ describe 'docdsl' do
         "..."
       end
       
-      doc "get specific stuff", { 
-        :kind => "the stuff"
-      }
+      doc "get specific stuff"
+      param :kind, "the stuff"
       get "/stuff/:kind" do
         "..."
       end
@@ -55,7 +54,6 @@ describe 'docdsl' do
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
       }
-      
     end
   end
     
@@ -70,7 +68,15 @@ describe 'docdsl' do
   
       doc "get a list of things"
       get "/things" do
-        "..."
+        "{}"
+      end
+      
+      doc "post a blob"
+      payload "some json content"
+      response "some other json content"
+
+      post "/things" do
+        "{}"
       end
     end
     
