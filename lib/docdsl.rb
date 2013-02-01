@@ -4,8 +4,8 @@ module Sinatra
       attr_accessor :title,:header,:footer,:introduction
       
       def initialize()
-        @title='API Documentation'
-        @header="#{@title}"
+        @title='DocDSL Documentation'
+        @header="API"
         @introduction="API Documentation for this resource"
         @footer="Powered by <strong>Sinatra DocDSL</strong>"
       end
