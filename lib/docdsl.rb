@@ -14,7 +14,6 @@ module Sinatra
           if block.arity == 1
             block(self)
           else
-            puts
             instance_eval(&block)
           end
         end
@@ -38,7 +37,7 @@ module Sinatra
     end
     
     class DocEntry
-      attr_accessor :desc,:params,:paths,:query_params,:headers,:payload,:response
+      attr_accessor :desc,:params,:paths,:query_params,:headers,:the_payload,:the_response
       
       def initialize(description, &block)
         @paths=[]
@@ -46,13 +45,12 @@ module Sinatra
         @params={}
         @query_params={}
         @headers={} 
-        @payload=nil
-        @response=nil 
+        @the_payload=nil
+        @the_response=nil 
         if(block)
           if block.arity == 1
             block(self)
           else
-            puts
             instance_eval(&block)
           end
         end
@@ -75,11 +73,11 @@ module Sinatra
       end
       
       def payload(desc)
-        @payload=desc
+        @the_payload=desc
       end
       
       def response(desc)
-        @response=desc      
+        @the_response=desc      
       end
       
       def param(name,desc)
@@ -149,8 +147,17 @@ module Sinatra
           headers << "</dl>\n"
         end
         headers ||= ''
+        
+        if entry.the_payload
+          payload="<dt>Payload</dt><dd>#{entry.the_payload}</dd>"
+        end
+        payload ||=''
+        if entry.the_response
+          response="<dt>Payload</dt><dd>#{entry.the_response}</dd>"          
+        end
+        response ||=''
 
-        markup << "<h2>%s</h2>\n<p>%s</p>\n%s%s%s" % [path, entry.desc, params, query_params, headers]
+        markup << "<h2>%s</h2>\n<p>%s</p>\n%s%s%s%s%s" % [path, entry.desc, params, query_params, headers,payload,response]
       } << ""
     end
     

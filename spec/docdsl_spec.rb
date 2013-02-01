@@ -22,6 +22,18 @@ describe 'docdsl' do
       get "/stuff/:kind" do
         "..."
       end
+      
+      documentation "you can document" do
+        param :param1, "url parameters"
+        query_param :queryParam1, "query string parameters"
+        header 'Content-Type', "header"
+        header 'Etag', "another header"
+        payload "the payload"
+        response "and of course a the response"
+      end
+      post "/everything/:param1" do
+        "..."
+      end
     end
     
     before(:all) do
@@ -48,13 +60,26 @@ describe 'docdsl' do
     
     it 'should contain the default title, header, and footer' do
       [
+        "url parameters",
+        "query string parameters",
+        'Content-Type', "header",
+        'Etag', "another header",
+        "the payload",
+        "and of course a the response",
+      ].each { |phrase|
+        @browser.last_response.body.should include(phrase)
+      }
+    end
+    
+    it "should document all elements" do
+      [
         "DocDSL Documentation",
         "API",
         "API Documentation for this resource",
         "Powered by <strong>Sinatra DocDSL</strong>"
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
-      }
+      }      
     end
   end
     
