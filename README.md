@@ -1,13 +1,17 @@
 # sinatra-docdsl
 
-Simple DSL for documenting sinatra resources and exposing the resulting documentation via /doc on the resource.
+DSL for documenting Sinatra applications and exposing the resulting documentation via /doc on the resource.
 
-Note: this is a work in progress.
+Sinatra-docdsl integrates nicely with the Sinatra framework and extends the Sinatra DSL with a 
+few documentation specific constructs. The current version simply produces a 
+simple html page but it should be pretty easy to modify the rendering to produce more complex output
+or e.g. a WADL description file.
 
 # install
-	TODO actually deploy the gem, for now build it yourself
-    
-    > gem install sinatra-docdsl
+
+Sinatra-docdsl is available at rubygems https://rubygems.org/gems/sinatra-docdsl. So, you can simply install it like this:
+
+    gem install sinatra-docdsl
 
 # Usage
 
