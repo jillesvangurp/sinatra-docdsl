@@ -1,2 +1,3 @@
 .project
 *.gem
+.ruby-version
