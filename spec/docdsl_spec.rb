@@ -51,7 +51,7 @@ describe 'docdsl' do
         "DocDSL Documentation",
         "API",
         "API Documentation for this resource",
-        "Powered by <strong>Sinatra DocDSL</strong>"
+        "Sinatra DocDSL"
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
       }      
