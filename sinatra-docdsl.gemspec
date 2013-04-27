@@ -8,4 +8,5 @@ Gem::Specification.new do |s|
   s.email       = 'incoming@jillesvangurp.xom'
   s.files       = ["lib/docdsl.rb"]
   s.homepage    = 'https://github.com/jillesvangurp/sinatra-docdsl'
+  s.license     = 'MIT'
 end
