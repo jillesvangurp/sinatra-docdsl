@@ -140,9 +140,9 @@ module Sinatra
         query_params ||=''
         
         
-        if entry.query_params.length >0
+        if entry.headers.length >0
           headers = entry.headers.inject("<h3>Header Parameters</h3>\n<dl>") { |li,(k,v)|
-            li << "<dt>:%s</dt><dd>%s</dd>" % [k,v]
+            li << "<dt>%s</dt><dd>%s</dd>" % [k,v]
           }
           headers << "</dl>\n"
         end
@@ -153,7 +153,7 @@ module Sinatra
         end
         payload ||=''
         if entry.the_response
-          response="<dt>Payload</dt><dd>#{entry.the_response}</dd>"          
+          response="<dt>Response</dt><dd>#{entry.the_response}</dd>"          
         end
         response ||=''
 
@@ -180,6 +180,8 @@ module Sinatra
                 <p>#{@page_doc.the_introduction}</p>
               
                 #{render_docs_list(entries)}
+                <br/>
+                <hr>
                 <p>#{@page_doc.the_footer}</p>
               </div>
             </body>
