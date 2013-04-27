@@ -8,7 +8,7 @@ module Sinatra
         @the_title='DocDSL Documentation'
         @the_header="API"
         @the_introduction="API Documentation for this resource"
-        @the_footer="Powered by <strong>Sinatra DocDSL</strong>"
+        @the_footer="Powered by <strong><a href="https://github.com/jillesvangurp/sinatra-docdsl">Sinatra DocDSL</a></strong>"
         
         if(block)
           if block.arity == 1
