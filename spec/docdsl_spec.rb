@@ -1,6 +1,7 @@
 require 'rack/test'
 require 'sinatra'
 require 'lib/docdsl'
+require 'json'
 
 describe 'docdsl' do
   describe 'documenting with defaults' do
@@ -126,6 +127,55 @@ describe 'docdsl' do
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
       }
+    end
+  end
+  
+  describe 'json rendering' do
+    class JsonDocumentedApp < Sinatra::Base
+      register Sinatra::DocDsl 
+      
+      page do      
+        title "DocDSL demo"
+        header "DocDSL API"
+        introduction "is awesome"
+        footer "QED"
+        configure_renderer do
+          self.json
+        end
+      end
+  
+      documentation "get a list of things"
+      get "/things" do
+        "{}"
+      end
+      
+      documentation "post a blob" do
+        payload "some json content"
+        response "some other json content"
+      end
+
+      post "/things" do
+        "{}"
+      end
+
+      documentation "you can document" do
+        param :param1, "url parameters"
+        query_param :queryParam1, "query string parameters"
+        header 'Content-Type', "header"
+        header 'Etag', "another header"
+        payload "the payload"
+        response "and of course a the response"
+      end
+      post "/everything/:param1" do
+        "..."
+      end
+    end
+    
+    it 'should return json' do
+      browser = Rack::Test::Session.new(Rack::MockSession.new(JsonDocumentedApp))
+      browser.get '/doc'
+      parsed=JSON.parse(browser.last_response.body)
+      parsed['title'].should eq "DocDSL demo"      
     end
   end
 end
