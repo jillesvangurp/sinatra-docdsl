@@ -93,6 +93,7 @@ describe 'docdsl' do
         response "and of course a the response", {:some_field=>'sample value'}
         status 200,"okidokie"
         status 400,"that was bad"
+        status 304
       end
       post "/everything/:param1" do
         "..."
@@ -117,7 +118,8 @@ describe 'docdsl' do
         "200",
         "400",
         "sample value",
-        "danger"
+        "danger",
+        "Not Modified"
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
       }
