@@ -8,7 +8,7 @@ Sinatra-docdsl integrates nicely with the Sinatra framework and extends the Sina
 
 # Why?
 
-We needed a tool to document our Sinatra based REST API at Localstream and I decided to write my own tool. You can check out our (https://localstre.am/api)[API Documentation] for an example.
+We needed a tool to document our Sinatra based REST API at Localstream and I decided to write my own tool. You can check out our [https://localstre.am/api](API Documentation) for an example.
 
 # install
 
