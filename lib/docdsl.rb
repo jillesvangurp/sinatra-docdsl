@@ -66,7 +66,7 @@ module Sinatra
               <head>
                 <title>#{@the_title}</title>
                 <style type="text/css">
-                  #container{width:960px; margin:1em auto; font-family:monaco, monospace;}
+                  #container{width:960px; margin:1em auto; font-family:monaco, monospace;font-size:11px;}
                   dt{ background:#f5f5f5; font-weight:bold; float:left; margin-right:1em; }
                   dd{ margin-left:1em; }
                 </style>
@@ -119,11 +119,28 @@ module Sinatra
           headers ||= ''
         
           if entry.the_payload
-            payload="<dt>Payload</dt><dd>#{entry.the_payload}</dd>"
+            payload="<dt>Payload</dt><dd>#{entry.the_payload}\n"
+            if(entry.sample_request)
+              payload << "<pre>#{JSON.pretty_generate(entry.sample_request)}</pre>"
+            end
+            payload << "</dd>"
           end
           payload ||=''
           if entry.the_response
-            response="<dt>Response</dt><dd>#{entry.the_response}</dd>"          
+            statuscodes=''
+            if entry.status_codes.length >0
+              status_codes="<dl>\n"
+              entry.status_codes.each do |status,meaning|
+                statuscodes << "<dt>#{status}</dt><dd>#{meaning}</dd>\n"
+              end
+              status_codes << "</dl>\n"
+            end
+            
+            response="<dt>Response</dt><dd>#{entry.the_response}\n#{statuscodes}\n"          
+            if(entry.sample_response)
+              response << "<pre>#{JSON.pretty_generate(entry.sample_response)}</pre>"
+            end
+            response << "</dd>"
           end
           response ||=''
 
@@ -133,7 +150,7 @@ module Sinatra
     end
     
     class DocEntry
-      attr_accessor :desc,:params,:paths,:query_params,:headers,:the_payload,:the_response
+      attr_accessor :desc,:params,:paths,:query_params,:headers,:the_payload,:the_response,:sample_request,:sample_response,:status_codes
       
       def initialize(description, &block)
         @paths=[]
@@ -142,7 +159,10 @@ module Sinatra
         @query_params={}
         @headers={} 
         @the_payload=nil
+        @sample_request=nil
         @the_response=nil 
+        @sample_response=nil
+        @status_codes={}
         if(block)
           if block.arity == 1
             block(self)
@@ -168,12 +188,14 @@ module Sinatra
         @desc=desc
       end
       
-      def payload(desc)
+      def payload(desc, example=nil)
         @the_payload=desc
+        @sample_request=example
       end
       
-      def response(desc)
-        @the_response=desc      
+      def response(desc,example=nil)
+        @the_response=desc 
+        @sample_response=example     
       end
       
       def param(name,desc)
@@ -188,6 +210,10 @@ module Sinatra
         @query_params[name]=desc      
       end
       
+      def status(code,meaning)
+        @status_codes[code]=meaning
+      end
+      
       def json
         {
             :description=>@desc, 
@@ -196,7 +222,10 @@ module Sinatra
             :query_parameters=>@query_params, 
             :headers=>@headers, 
             :payload=>@the_payload, 
-            :response=>@the_response
+            :sample_request=>@sample_request,
+            :response=>@the_response,
+            :status_codes=>@status_codes,
+            :sample_response=>@sample_response
         }
       end
     end  

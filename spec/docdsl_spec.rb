@@ -89,8 +89,10 @@ describe 'docdsl' do
         query_param :queryParam1, "query string parameters"
         header 'Content-Type', "header"
         header 'Etag', "another header"
-        payload "the payload"
-        response "and of course a the response"
+        payload "the payload", {:gimme=>"danger"}
+        response "and of course a the response", {:some_field=>'sample value'}
+        status 200,"okidokie"
+        status 400,"that was bad"
       end
       post "/everything/:param1" do
         "..."
@@ -110,7 +112,12 @@ describe 'docdsl' do
         "is awesome",
         "GET /things",
         "get a list of things",
-        "QED"
+        "QED",
+        "okidokie",
+        "200",
+        "400",
+        "sample value",
+        "danger"
       ].each { |phrase|
         @browser.last_response.body.should include(phrase)
       }
