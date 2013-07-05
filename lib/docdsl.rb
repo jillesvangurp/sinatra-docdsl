@@ -211,10 +211,11 @@ module Sinatra
       end
       
       def status(code,meaning=nil)
+        official_meaning=status_codes_map[code]
         if meaning
-          @status_codes[code]=meaning
+          @status_codes[code]="#{official_meaning} - #{meaning}"
         else
-          @status_codes[code]=status_codes_map[code]
+          @status_codes[code]=official_meaning
         end
       end
       
