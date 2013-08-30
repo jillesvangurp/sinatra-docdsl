@@ -101,6 +101,7 @@ This code is licensed under the expat license. See the LICENSE file for details.
 
 # Changes
 
+- 0.6 Fix bug where documentation block was being passed to Page constructor if there is no Page object yet.
 - 0.5 Add default meaning for status codes. This saves you from having to type OK or Not Modified for e.g. 200 and 304 codes over and over again.
 - 0.4 refactor to enable custom rendering and add ability to document status codes and add sample requests and responses ruby objects that are pretty printed as json
 - 0.1-0.3 First few releases. 
