@@ -297,7 +297,7 @@ module Sinatra
     end
     
     def documentation(description,&block)
-      @page_doc ||= PageDoc.new(&block)
+      @page_doc ||= PageDoc.new
       @last_doc=DocEntry.new(description,&block)
       (@page_doc.entries ||= []) << @last_doc
     end

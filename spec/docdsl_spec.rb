@@ -187,4 +187,24 @@ describe 'docdsl' do
       parsed['title'].should eq "DocDSL demo"      
     end
   end
+  
+  describe "it shouldn't break without page" do
+    class AppWithoutPage < Sinatra::Base
+      register Sinatra::DocDsl 
+
+      documentation "get a list of things" do
+        param :param1, "thisshouldbethere"
+      end
+      get "/things/:param1" do
+        "{}"
+      end
+
+    end
+    
+    it 'should retrieve documentation and not break on missing page object' do
+      browser = Rack::Test::Session.new(Rack::MockSession.new(AppWithoutPage))
+      browser.get '/doc'
+      browser.last_response.body.should include("thisshouldbethere")
+    end   
+  end
 end
