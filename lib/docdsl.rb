@@ -113,16 +113,6 @@ HTML
 #{@the_introduction}
 
 "
-# :description=>@desc, 
-# :url_parameters=>@params, 
-# :paths=>@paths, 
-# :query_parameters=>@query_params, 
-# :headers=>@headers, 
-# :payload=>@the_payload, 
-# :sample_request=>@sample_request,
-# :response=>@the_response,
-# :status_codes=>@status_codes,
-# :sample_response=>@sample_response
         markdown = @entries.inject(markdown) do | md, entry |
           path = entry.paths.join(', ')
           params = definition_list("Url Parameters", entry.params)

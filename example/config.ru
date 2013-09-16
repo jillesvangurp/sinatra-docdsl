@@ -11,14 +11,13 @@ class DocumentedApp < Sinatra::Base
   # specify some meta data for your documentation page (optional)
   page do      
     title "DocDSL demo"
-    header "DocDSL is a tool to document REST APIs implemented using Sinatra"
-    introduction "You can use the page section to write a small introduction, add a title, and headers/footers"
+    header "Displayed before the title."
+    introduction "A short introduction to your API."
     footer "
 # Footer section
 As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire footer section is written using markdown.
 
 # heading 1
-
 
 ## bullets
 - bullets
@@ -29,12 +28,10 @@ As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire footer s
 1. numbered list
 1. numbered list
 
-## code examples
-~~~ ruby
-puts 'hello world in ruby'
-~~~
+etc.
 
-Sinatra-docdsl uses the jruby friendly Kramdown dialect and you can use it anywhere, provided you use the markdown renderer (default). Of course you can
+Sinatra-docdsl uses the jruby friendly Kramdown dialect and you can use it anywhere, 
+provided you use the markdown renderer (default). Of course you can
 configure other renderers.
 "
     # configuring the renderer is optional, and in this case just uses the default
@@ -52,8 +49,9 @@ configure other renderers.
       # finally, we have a simple html template that does not rely on markdown
       # self.html
             
-      # Of course, you can easily write your own renderer. It is executed on the @page_doc object 
-      # and you have full access to the attributes in there.
+      # Of course, you can easily write your own renderer. It is executed on 
+      # the @page_doc object and you have full access to the attributes in there.
+      # be sure to return a valid sinatra response, e.g. [200,'hello wrld']
     end
   end
   
@@ -85,11 +83,12 @@ configure other renderers.
     query_param :queryParam1, "query string parameters"
     header 'Content-Type', "header"
     header 'Etag', "another header"
-    payload "the payload and some sample json as an example (optional. The example can be any ruby object that implements to_json)", {:gimme=>"danger"}
-    response "Description of the normal response and optional sample json. The example can be any ruby object that implements to_json.", {:some_field=>'sample value'}
+    payload "description of the request body", 
+      {:rubyfragment=>"will be rendered as json", :optional=>true}
+    response "Description of the response", {:some_field=>'sample value', :optional=>true}
     status 200,"and you can document status codes"
-    status 400,"the official meaning of the code is displayed as well and the explanation is optional as you can see below"
-    status 404
+    status 400,"the official meaning of the code is displayed by default"
+    status 404,"so you can leave out the optional description"
     status 409
     status 500
   end
