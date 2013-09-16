@@ -58,7 +58,7 @@ module Sinatra
           :endPoints=>entries
         }
       
-        object.to_json
+        [200,{'content-type' => 'application/json;charset=UTF8'},object.to_json]
       end
       
       def definition_list(title, definitions) 
@@ -94,14 +94,14 @@ module Sinatra
   </body>
 </html>
 HTML
-          [200,body]
+          [200,{'content-type' => 'text/html;charset=UTF8'},body]
         rescue => e
           [500,"oops, #{e.to_s}\n#{e.backtrace}"]
         end
       end
       
       def md
-        [200,to_markdown]
+        [200,{'content-type' => 'text/plain;charset=UTF8'},to_markdown]
       end
       
       def to_markdown
@@ -217,7 +217,7 @@ HTML
               </body>
             </html>
           HTML
-          [200,body]
+          [200,{'content-type' => 'text/html;charset=UTF8'},body]
         rescue => e
           [500,"oops, #{e.to_s}\n#{e.backtrace}"]
         end        
