@@ -12,7 +12,8 @@ module Sinatra
         @the_introduction="API Documentation for this resource"
         @the_footer='Powered by <strong><a href="https://github.com/jillesvangurp/sinatra-docdsl">Sinatra DocDSL</a></strong>'
         configure_renderer do
-          self.html
+          # default
+          self.render_md
         end
         if(block)
           if block.arity == 1
@@ -74,8 +75,9 @@ module Sinatra
       end
       
       def render_md
-        html=Kramdown::Document.new(md).to_html
-        body= <<-HTML
+        begin
+          html=Kramdown::Document.new(to_markdown).to_html
+          body= <<-HTML
 <html>
   <head>
     <title>#{@the_title}</title>
@@ -92,10 +94,17 @@ module Sinatra
   </body>
 </html>
 HTML
-        
+          [200,body]
+        rescue => e
+          [500,"oops, #{e.to_s}\n#{e.backtrace}"]
+        end
       end
       
       def md
+        [200,to_markdown]
+      end
+      
+      def to_markdown
         markdown="
 #{@the_header}
         
@@ -129,9 +138,9 @@ HTML
 "
             if(entry.sample_request)
               payload << "
-'''
+~~~ javascript
 #{JSON.pretty_generate(entry.sample_request)}
-'''
+~~~
 
 "
             end
@@ -147,9 +156,9 @@ HTML
 "          
             if(entry.sample_response)
               response << "
-'''
+~~~ javascript
 #{JSON.pretty_generate(entry.sample_response)}
-'''
+~~~
 
 "
             end
@@ -208,10 +217,10 @@ HTML
               </body>
             </html>
           HTML
+          [200,body]
         rescue => e
-          puts e.to_s
-        end
-        body
+          [500,"oops, #{e.to_s}\n#{e.backtrace}"]
+        end        
       end 
     
       def render_html_entries 
@@ -407,7 +416,7 @@ HTML
         begin
           app.instance_eval { 
             @page_doc ||= PageDoc.new             
-            [200,@page_doc.render]
+            @page_doc.render
           }
         rescue Exception=>e
           puts e.message, e.backtrace.inspect
