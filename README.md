@@ -2,9 +2,9 @@
 
 DocDSL is a DSL for documenting REST APIs that are implemented using Sinatra. 
 
-Simply tell DocDSL what each endpoint does using easy to use keywords right along with your Sinatra code and it exposes the resulting documentation via /doc on the resource.
-
-Sinatra-docdsl integrates nicely with the Sinatra framework and extends the Sinatra DSL with a few documentation specific constructs. The current version simply produces a simple html page but it should be pretty easy to modify the rendering to produce more complex output or e.g. a WADL description file.
+- document REST end points, url & query parameters, headers, request & response bodies.
+- use *markdown* in your documentation
+- insert a /doc endpoint in your api with the documentation
 
 # Why?
 
@@ -18,9 +18,7 @@ Sinatra-docdsl is available at rubygems https://rubygems.org/gems/sinatra-docdsl
 
 # Usage
 
-Here's a sample application that shows of how you use docdsl. You can find it in the example directory. 
-
-Notice that we there is a render function (optional) in the page declaration. It simply delegates to the builtin markdown html renderer that outputs a simple documentation page (this is the default). There is also a json implementation that you may use and it is very easy to plug in your own implementation.
+Here's a sample application that shows of how you use docdsl. You can find it in the example directory. Most of what you see is optional: you can add as much or as little documentation as you need. 
 
     > config.ru
     
