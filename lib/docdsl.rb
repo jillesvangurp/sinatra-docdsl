@@ -1,4 +1,5 @@
 require 'json'
+require 'kramdown'
 
 module Sinatra
   module DocDsl
@@ -57,6 +58,129 @@ module Sinatra
         }
       
         object.to_json
+      end
+      
+      def definition_list(title, definitions) 
+        if definitions.length > 0
+          definitions.inject("### #{title}\n\n") do | dl, (k,v) |
+            dl << "
+#{k}
+:  #{v}
+"
+          end
+        else
+          ''
+        end
+      end
+      
+      def render_md
+        html=Kramdown::Document.new(md).to_html
+        body= <<-HTML
+<html>
+  <head>
+    <title>#{@the_title}</title>
+    <style type="text/css">
+      #container{width:960px; margin:1em auto; font-family:monaco, monospace;font-size:11px;}
+      dt{ background:#f5f5f5; font-weight:bold; float:left; margin-right:1em; }
+      dd{ margin-left:1em; }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      #{html}
+    </div>
+  </body>
+</html>
+HTML
+        
+      end
+      
+      def md
+        markdown="
+#{@the_header}
+        
+# #{@the_title}
+
+#{@the_introduction}
+
+"
+# :description=>@desc, 
+# :url_parameters=>@params, 
+# :paths=>@paths, 
+# :query_parameters=>@query_params, 
+# :headers=>@headers, 
+# :payload=>@the_payload, 
+# :sample_request=>@sample_request,
+# :response=>@the_response,
+# :status_codes=>@status_codes,
+# :sample_response=>@sample_response
+        markdown = @entries.inject(markdown) do | md, entry |
+          path = entry.paths.join(', ')
+          params = definition_list("Url Parameters", entry.params)
+          query_params = definition_list("Query Parameters", entry.query_params)
+          header_params = definition_list("Header Parameters", entry.headers)
+                
+          if entry.the_payload
+            payload="
+### Request body
+
+#{entry.the_payload} 
+           
+"
+            if(entry.sample_request)
+              payload << "
+'''
+#{JSON.pretty_generate(entry.sample_request)}
+'''
+
+"
+            end
+          end
+          payload ||=''
+          
+          
+          if entry.the_response            
+            response="
+### Response
+#{entry.the_response}
+
+"          
+            if(entry.sample_response)
+              response << "
+'''
+#{JSON.pretty_generate(entry.sample_response)}
+'''
+
+"
+            end
+          end
+          response ||=''
+          status_codes=definition_list("Status codes", entry.status_codes)
+
+
+          md << "
+## #{path}
+
+#{entry.desc}
+
+#{params}
+
+#{query_params}
+
+#{header_params}
+
+#{payload}
+
+#{response}
+
+#{status_codes}
+"
+        end
+        
+        markdown << "
+#{@the_footer}
+"
+        markdown
       end
       
       def html

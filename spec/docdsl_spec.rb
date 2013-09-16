@@ -207,4 +207,56 @@ describe 'docdsl' do
       browser.last_response.body.should include("thisshouldbethere")
     end   
   end
+  
+  describe "markdown support" do
+    class MDDocumentedApp < Sinatra::Base
+      register Sinatra::DocDsl 
+      
+      page do      
+        title "DocDSL with MarkDown"
+        header "DocDSL API"
+        introduction "is awesome as well"
+        footer "MDFTW!"
+        configure_renderer do
+          self.render_md
+        end
+      end
+  
+      documentation "get a list of things"
+      get "/things" do
+        "{}"
+      end
+      
+      documentation "post a blob" do
+        payload "some json content"
+        response "some other json content"
+      end
+
+      post "/things" do
+        "{}"
+      end
+
+      documentation "you can document" do
+        param :param1, "url parameters"
+        query_param :queryParam1, "query string parameters"
+        header 'Content-Type', "header"
+        header 'Etag', "another header"
+        payload "the payload"
+        response "and of course a the response"
+      end
+      post "/everything/:param1" do
+        "..."
+      end
+    end
+    
+    it 'should render markdown without errors' do
+      browser = Rack::Test::Session.new(Rack::MockSession.new(MDDocumentedApp))
+      browser.get '/doc'
+      
+      # if it includes the footer, it didn't throw an exception while rendering
+      browser.last_response.body.should include "MDFTW!"
+      
+      # puts browser.last_response.body
+    end
+  end
 end
