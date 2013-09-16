@@ -56,11 +56,6 @@ As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire footer s
 1. numbered list
 1. numbered list
 
-## code examples
-~~~ ruby
-puts 'hello world in ruby'
-~~~
-
 Sinatra-docdsl uses the jruby friendly Kramdown dialect and you can use it anywhere, provided you use the markdown renderer (default). Of course you can
 configure other renderers.
 "
