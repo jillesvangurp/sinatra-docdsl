@@ -23,6 +23,8 @@ Here's a sample application that shows of how you use docdsl. You can find it in
 Notice that we there is a render function (optional) in the page declaration. It simply delegates to the builtin markdown html renderer that outputs a simple documentation page (this is the default). There is also a json implementation that you may use and it is very easy to plug in your own implementation.
 
     > config.ru
+    
+``` ruby
     require 'sinatra'
     require 'json'
     require 'docdsl'
@@ -127,6 +129,7 @@ Notice that we there is a render function (optional) in the page declaration. It
     map '/' do
       run DocumentedApp
     end
+```
 
 # License
 
