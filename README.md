@@ -59,7 +59,7 @@ Notice that we there is a render function (optional) in the page declaration. It
     puts 'hello world in ruby'
     ~~~
 
-    Sinatra-docdsl uses the jruby friendly Kwamdown dialect and you can use it anywhere, provided you use the markdown renderer (default). Of course you can
+    Sinatra-docdsl uses the jruby friendly Kramdown dialect and you can use it anywhere, provided you use the markdown renderer (default). Of course you can
     configure other renderers.
     "
         # configuring the renderer is optional, and in this case just uses the default
