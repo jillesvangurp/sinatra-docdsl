@@ -3,8 +3,9 @@
 DocDSL is a DSL for documenting REST APIs that are implemented using Sinatra. 
 
 - document REST end points, url & query parameters, headers, request & response bodies.
-- use *markdown* in your documentation
+- use **markdown** in your documentation
 - insert a /doc endpoint in your api with the documentation
+- customise documentation rendering
 
 # Why?
 
