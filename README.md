@@ -46,7 +46,6 @@ As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire footer s
 
 # heading 1
 
-
 ## bullets
 - bullets
 - bullets
