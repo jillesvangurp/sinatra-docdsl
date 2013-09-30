@@ -140,7 +140,7 @@ end
 This code is licensed under the expat license. See the LICENSE file for details.
 
 # Changes
-
+- 0.8.2 Fix exception handling in render function
 - 0.8.1 Don't needlessly re-initialize the page object
 - 0.8 Make the documentation end point explicitly configurable via doc_endpoint
 - 0.7 Add markdown support (kramdown dialect) and let render methods return a sinatra response instead of just the body

@@ -407,8 +407,7 @@ HTML
         begin
           page_doc.render
         rescue Exception=>e
-          puts e.message, e.backtrace.inspect
-          [500,@page_doc.render]
+          [500,"#{e.message} #{e.backtrace.inspect}"]
         end
       end      
     end
