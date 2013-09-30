@@ -1,15 +1,17 @@
 # sinatra-docdsl
 
-DocDSL is a DSL for documenting REST APIs that are implemented using Sinatra. 
+A simple DSL for generating documentation for Sinatra REST applications. 
 
 - document REST end points, url & query parameters, headers, request & response bodies.
-- use **markdown** in your documentation
-- insert a /doc endpoint in your api with the documentation
-- customise documentation rendering
+- use **markdown** in your documentation (uses kramdown, which supports the Github flavor of markdown)
+- customize documentation rendering
+- render documentation via a Sinatra end point on the resource, e.g. "/doc"
 
 # Why?
 
 We needed a tool to document our Sinatra based REST API at Localstream and I decided to write my own tool. You can check out our [API Documentation](https://localstre.am/api) for an example.
+
+Writing documentation is a bit of a chore. Over the years, I've learned that the best documentation is written in line with the source code. Doing it after the fact means that quite often it doesn't get done, it gets done poorly, or it is neglected once it is written. Docdsl tries to make the writing and maintenance of API documentation as straightforward as possible. 
 
 # Installation
 
@@ -21,8 +23,8 @@ Sinatra-docdsl is available at rubygems https://rubygems.org/gems/sinatra-docdsl
 
 Here's a sample application that shows of how you use docdsl. You can find it in the example directory. Most of what you see is optional: you can add as much or as little documentation as you need. 
 
-    > config.ru
-    
+config.ru:
+
 ``` ruby
 require 'sinatra'
 require 'json'
@@ -121,6 +123,9 @@ configure other renderers.
   post "/everything/:param1" do | param1 |    
     [200,{:theThing=>param1}.to_json]
   end
+  
+  # this tells docdsl to render the documentation when you do a GET on /doc
+  doc_endpoint "/doc"  
 end
 
 # wire up our sample app to rack
@@ -136,6 +141,7 @@ This code is licensed under the expat license. See the LICENSE file for details.
 
 # Changes
 
+- 0.8 Make the documentation end point explicitly configurable via doc_endpoint
 - 0.7 Add markdown support (kramdown dialect) and let render methods return a sinatra response instead of just the body
 - 0.6 Fix bug where documentation block was being passed to Page constructor if there is no Page object yet.
 - 0.5 Add default meaning for status codes. This saves you from having to type OK or Not Modified for e.g. 200 and 304 codes over and over again.
