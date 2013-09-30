@@ -70,6 +70,7 @@ describe 'docdsl' do
         header "DocDSL API"
         introduction "is awesome"
         footer "QED"
+        url_prefix "/myapplicationpath"
       end
       
       doc_endpoint "/doc"      
@@ -117,7 +118,7 @@ describe 'docdsl' do
         "DocDSL demo",
         "DocDSL API",
         "is awesome",
-        "GET /things",
+        "GET /myapplicationpath/things",
         "get a list of things",
         "QED",
         "okidokie",

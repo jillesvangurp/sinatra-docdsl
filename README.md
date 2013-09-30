@@ -41,9 +41,14 @@ class DocumentedApp < Sinatra::Base
     title "DocDSL demo"
     header "Displayed before the title."
     introduction "A short introduction to your API."
+    # useful if your sinatra app lives under some context path other than /. 
+    # Causes the paths in the documentation to be prefixed with 
+    # this. Defaults to empty
+    url_prefix "/my/application/path"
     footer "
 # Footer section
-As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire footer section is written using markdown.
+As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire 
+footer section is written using markdown.
 
 # heading 1
 
@@ -132,7 +137,6 @@ end
 map '/' do
   run DocumentedApp
 end
-
 ```
 
 # License
@@ -140,6 +144,7 @@ end
 This code is licensed under the expat license. See the LICENSE file for details.
 
 # Changes
+- 0.8.3 Add url_prefix feature so that the endpoint path can be prefixed with a custom prefix_
 - 0.8.2 Fix exception handling in render function
 - 0.8.1 Don't needlessly re-initialize the page object
 - 0.8 Make the documentation end point explicitly configurable via doc_endpoint

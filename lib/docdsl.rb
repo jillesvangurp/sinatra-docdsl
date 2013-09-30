@@ -4,11 +4,12 @@ require 'kramdown'
 module Sinatra
   module DocDsl
     class PageDoc
-      attr_accessor :the_title,:the_header,:the_footer,:the_introduction,:entries
+      attr_accessor :the_title,:the_header,:the_footer,:the_introduction,:entries,:the_url_prefix
       
       def initialize(&block)
         @the_title='DocDSL Documentation'
         @the_header="API"
+        @the_url_prefix=""
         @the_introduction="API Documentation for this resource"
         @the_footer='Powered by <strong><a href="https://github.com/jillesvangurp/sinatra-docdsl">Sinatra DocDSL</a></strong>'
         configure_renderer do
@@ -46,6 +47,10 @@ module Sinatra
       
       def render
         @render_function.call
+      end
+      
+      def url_prefix(prefix)
+        @the_url_prefix=prefix
       end
       
       def json
@@ -303,10 +308,6 @@ HTML
         self.inspect
       end
       
-      def inspect
-        "#{@paths.join(', ')} # #{@desc}"
-      end
-      
       def describe(desc)
         @desc=desc
       end
@@ -423,9 +424,10 @@ HTML
     end
     
     def method_added(method)
-      # document the method and nullify last_doc so that a new one gets created for the next method
+      # gets called everytime a method is added to the app.
+      # only triggers if the previous method was a documentation ... call
       if @last_doc
-        @last_doc << method
+        @last_doc << method.to_s.sub(' ', " #{@page_doc.the_url_prefix}")
         @last_doc = nil
       end
       super

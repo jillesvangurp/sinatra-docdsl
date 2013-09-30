@@ -13,9 +13,14 @@ class DocumentedApp < Sinatra::Base
     title "DocDSL demo"
     header "Displayed before the title."
     introduction "A short introduction to your API."
+    # useful if your sinatra app lives under some context path other than /. 
+    # Causes the paths in the documentation to be prefixed with 
+    # this. Defaults to empty
+    url_prefix "/my/application/path"
     footer "
 # Footer section
-As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire footer section is written using markdown.
+As of 0.7.0, Sinatra docdsl supports markdown. For example, this entire 
+footer section is written using markdown.
 
 # heading 1
 
