@@ -400,23 +400,21 @@ HTML
         }
       end
     end  
-    
-    def self.registered(app)
-      app.get '/doc' do
+        
+    def doc_endpoint(path) 
+      page_doc=@page_doc
+      get path do     
         begin
-          app.instance_eval { 
-            @page_doc ||= PageDoc.new             
-            @page_doc.render
-          }
+          page_doc.render
         rescue Exception=>e
           puts e.message, e.backtrace.inspect
           [500,@page_doc.render]
         end
       end      
     end
-        
+                  
     def page(&block)
-      @page_doc ||= PageDoc.new(&block)
+      @page_doc = PageDoc.new(&block)
     end
     
     def documentation(description,&block)
@@ -426,10 +424,8 @@ HTML
     end
     
     def method_added(method)
-      # don't document /doc
-      return if method.to_s =~ /(^(GET|HEAD) \/doc\z)/
       # document the method and nullify last_doc so that a new one gets created for the next method
-      if method.to_s =~ /(GET|POST|PUT|DELETE|UPDATE|HEAD)/ && @last_doc
+      if @last_doc
         @last_doc << method
         @last_doc = nil
       end

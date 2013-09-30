@@ -23,6 +23,8 @@ describe 'docdsl' do
       get "/stuff/:kind" do
         "..."
       end
+      
+      doc_endpoint "/doc"
     end
     
     before(:all) do
@@ -69,6 +71,8 @@ describe 'docdsl' do
         introduction "is awesome"
         footer "QED"
       end
+      
+      doc_endpoint "/doc"      
   
       documentation "get a list of things"
       get "/things" do
@@ -98,6 +102,8 @@ describe 'docdsl' do
       post "/everything/:param1" do
         "..."
       end
+      
+      doc_endpoint "/doc"
     end
     
     before(:all) do
@@ -152,6 +158,8 @@ describe 'docdsl' do
           self.json
         end
       end
+      
+      doc_endpoint "/doc"      
   
       documentation "get a list of things"
       get "/things" do
@@ -199,6 +207,7 @@ describe 'docdsl' do
         "{}"
       end
 
+      doc_endpoint "/doc"
     end
     
     it 'should retrieve documentation and not break on missing page object' do
@@ -221,6 +230,8 @@ describe 'docdsl' do
           self.render_md
         end
       end
+      
+      doc_endpoint "/doc"
   
       documentation "get a list of things"
       get "/things" do
@@ -255,8 +266,32 @@ describe 'docdsl' do
       
       # if it includes the footer, it didn't throw an exception while rendering
       browser.last_response.body.should include "MDFTW!"
+    end
+  end
+  
+  describe "Should use custom renderer on custom endpoint" do
+    class NoDocApp < Sinatra::Base
+      register Sinatra::DocDsl 
+      page do
+        title "Hello World"
+        configure_renderer do 
+          [200,self.the_title]
+        end
+      end
+  
+      documentation "get a list of things"
+      get "/things" do
+        "{}"
+      end
       
-      # puts browser.last_response.body
+      doc_endpoint "/mydoc"      
+    end
+    
+    it 'should 404 on /doc' do
+      browser = Rack::Test::Session.new(Rack::MockSession.new(NoDocApp))
+      browser.get '/mydoc'
+      browser.last_response.status.should be 200
+      browser.last_response.body.should eq 'Hello World'      
     end
   end
 end

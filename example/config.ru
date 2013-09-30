@@ -95,6 +95,9 @@ configure other renderers.
   post "/everything/:param1" do | param1 |    
     [200,{:theThing=>param1}.to_json]
   end
+  
+  # this tells docdsl to render the documentation when you do a GET on /doc
+  doc_endpoint "/doc"  
 end
 
 # wire up our sample app to rack
