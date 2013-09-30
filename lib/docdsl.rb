@@ -414,7 +414,7 @@ HTML
     end
                   
     def page(&block)
-      @page_doc = PageDoc.new(&block)
+      @page_doc ||= PageDoc.new(&block)
     end
     
     def documentation(description,&block)
