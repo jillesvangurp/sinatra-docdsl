@@ -9,7 +9,7 @@ A simple DSL for generating documentation for Sinatra REST applications.
 
 # Why?
 
-We needed a tool to document our Sinatra based REST API at Localstream and I decided to write my own tool. You can check out our [API Documentation](https://localstre.am/api) for an example.
+We needed a tool to document our Sinatra based REST API at Localstream and I decided to write my own tool.
 
 Writing documentation is a bit of a chore. Over the years, I've learned that the best documentation is written in line with the source code. Doing it after the fact means that quite often it doesn't get done, it gets done poorly, or it is neglected once it is written. Docdsl tries to make the writing and maintenance of API documentation as straightforward as possible. 
 
