@@ -3,6 +3,7 @@ require 'kramdown'
 
 module Sinatra
   module DocDsl
+    attr_accessor :page_doc
     class PageDoc
       attr_accessor :the_title,:the_header,:the_footer,:the_introduction,:entries,:the_url_prefix
 
@@ -403,6 +404,7 @@ HTML
     end
 
     def doc_endpoint(path)
+      @page_doc ||= PageDoc.new(&block)
       page_doc=@page_doc
       get path do
         begin
