@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name        = 'sinatra-docdsl'
-  s.version     = '0.8.5'
+  s.version     = '0.8.6'
   s.date        = '2014-02-28'
   s.summary     = "Documentation DSL for Sinatra"
   s.description = "A simple DSL for generating documentation for Sinatra REST applications"
