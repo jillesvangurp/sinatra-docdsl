@@ -404,7 +404,7 @@ HTML
     end
 
     def doc_endpoint(path)
-      @page_doc ||= PageDoc.new(&block)
+      @page_doc ||= PageDoc.new()
       page_doc=@page_doc
       get path do
         begin
